@@ -4,7 +4,7 @@
 /usr/sbin/sshd -D &
 
 # Start your additional process (replace with your command)
-fastapi dev src/main.py --host 0.0.0.0 --port 8081 --reload &
+fastapi dev src/main.py --host 0.0.0.0 --port 80 --reload &
 
 # Wait for any process to exit
 wait -n

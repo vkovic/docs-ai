@@ -1,44 +1,12 @@
 services:
   service:
     build:
-      dockerfile_inline: |
-        FROM python:3.13-bookworm
-        
-        # Install OpenSSH server
-        RUN apt-get update && apt-get install -y openssh-server
-        RUN mkdir /var/run/sshd
-        
-        # Set root password (change 'yourpassword' to a secure password)
-        RUN echo 'root:root' | chpasswd
-        
-        # Allow root login
-        RUN sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
-        
-        WORKDIR /app
-
-        # Copy your shell script into the container
-        COPY start.sh .
-        RUN chmod +x start.sh
-        
-        # Expose SSH port
-        EXPOSE 22
-        
-        # Upgrade pip and install setuptools to ensure compatibility
-        RUN python -m ensurepip --upgrade && \
-            python -m pip install --upgrade pip setuptools
-        
-        # Copy requirements file and install dependencies
-        COPY requirements.txt .
-        RUN pip install --no-cache-dir -r requirements.txt
-        
-        # Set the entrypoint to your script
-        # CMD ["/app/start.sh"]
+        context: .
+        dockerfile: .docker/service/Dockerfile
     ports:
-      - 8081:8081
+      - 8081:80
       - 2222:22
     volumes:
       - .:/app
     environment:
       - PYTHONUNBUFFERED=1  # Print logs in real-time
-    command: >
-        /bin/sh -c "./start.sh"
