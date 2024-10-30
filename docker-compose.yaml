@@ -1,0 +1,22 @@
+services:
+  service:
+    build:
+      dockerfile_inline: |
+        FROM python:3.13-bookworm
+        WORKDIR /app
+        
+        # Upgrade pip and install setuptools to ensure compatibility
+        RUN python -m ensurepip --upgrade && \
+            python -m pip install --upgrade pip setuptools
+        
+        # Copy requirements file and install dependencies
+        COPY requirements.txt .
+        RUN pip install --no-cache-dir -r requirements.txt
+    ports:
+      - 8081:8081
+    volumes:
+      - .:/src
+    environment:
+      - PYTHONUNBUFFERED=1  # Print logs in real-time
+    command: >
+      /bin/sh -c "pip install fastapi[standard] && tail -f /dev/null"
