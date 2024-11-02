@@ -1,11 +1,12 @@
 from sqlalchemy import Column, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
+
+from .base import Base
 
 
-class Item(declarative_base()):
+class Item(Base):
     __tablename__ = "items"
 
-    id = Column(Integer, primary_key=False)
+    id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     price = Column(Integer, nullable=False)
     description = Column(String, nullable=True)
