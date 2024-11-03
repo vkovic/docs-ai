@@ -1,26 +1,18 @@
-from fastapi import FastAPI, Request
-from fastapi.responses import JSONResponse
+from fastapi import FastAPI
 
 from .database import engine
+from .exception_handler import exception_handler
 from .models.base import Base
 from .routes import router
 
 # Init app
 app = FastAPI()
 
-# Error handler
-@app.exception_handler(Exception)
-async def exception(request: Request, exc: Exception):
-    return JSONResponse(
-        status_code=400,
-        content={
-            "detail": str(exc),
-            "url": str(request.url),
-        }
-    )
-
 # Init db
 Base.metadata.create_all(bind=engine)
+
+# Exception handler
+app.add_exception_handler(Exception, exception_handler)
 
 # Routes
 app.include_router(router)
