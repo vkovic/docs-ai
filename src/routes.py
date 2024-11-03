@@ -1,5 +1,7 @@
 from typing import Union
 
+import ollama
+from ollama import Client
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
@@ -11,6 +13,17 @@ from .schemas.user_dto import UserDTO
 
 router = APIRouter()
 
+@router.get("/banana")
+def test_ollama():
+    client = Client(host='ollama:11434')
+    response = client.chat(model='llama3.2', messages=[
+        {
+            'role': 'user',
+            'content': 'Hi',
+        },
+    ])
+
+    return {"answer": response['message']['content']}
 
 @router.get("/test")
 def test(db: Session = Depends(get_db)):

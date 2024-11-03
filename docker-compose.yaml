@@ -1,12 +1,13 @@
 volumes:
   db_data:
+  ollama_storage:
 
 services:
 
   app:
     build:
-        context: .
-        dockerfile: .docker/service/Dockerfile
+      context: .
+      dockerfile: .docker/service/Dockerfile
     ports:
       - 8081:80
       - 2222:22
@@ -35,3 +36,11 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - 11434:11434
+    volumes:
+      - ollama_storage:/root/.ollama
