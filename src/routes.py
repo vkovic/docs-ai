@@ -1,7 +1,5 @@
 from typing import Union
 
-import ollama
-from ollama import Client
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
@@ -10,20 +8,16 @@ from .models.item import Item
 from .models.user import User
 from .schemas.item_dto import ItemDTO
 from .schemas.user_dto import UserDTO
+from .services.create_user_service import create_user
+from .services.ollama_chat_service import chat
 
 router = APIRouter()
 
-@router.get("/banana")
-def test_ollama():
-    client = Client(host='ollama:11434')
-    response = client.chat(model='llama3.2', messages=[
-        {
-            'role': 'user',
-            'content': 'Hi',
-        },
-    ])
 
-    return {"answer": response['message']['content']}
+@router.get("/chat")
+def test_ollama():
+    return {"answer": chat()}
+
 
 @router.get("/test")
 def test(db: Session = Depends(get_db)):
@@ -63,5 +57,4 @@ def create_item(item_dto: ItemDTO, db: Session = Depends(get_db)):
 
 @router.post("/users")
 def create_user(user_dto: UserDTO, db: Session = Depends(get_db)):
-    from src.services.create_user_service import create_user
     return create_user(user_dto, db)

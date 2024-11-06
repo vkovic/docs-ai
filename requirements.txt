@@ -3,3 +3,5 @@ sqlalchemy
 asyncpg
 psycopg2
 ollama
+pgvector
+notebook
