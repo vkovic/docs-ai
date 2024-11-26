@@ -5,3 +5,4 @@ psycopg2
 ollama
 pgvector
 notebook
+langchain-ollama
